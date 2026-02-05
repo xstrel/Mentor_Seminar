@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    hostname: 9d865835357d  # или удалите эту строку для автоматического hostname
+    restart: unless-stopped  # было "no", лучше изменить
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://mei-semielevated-nubbly.ngrok-free.dev/
+      - N8N_EDITOR_BASE_URL=https://mei-semielevated-nubbly.ngrok-free.dev/
+      - GENERIC_TIMEZONE=Europe/Moscow
+      - TZ=Europe/Moscow
+      - NODE_VERSION=22.21.1
+      - NPM_CONFIG_UPDATE_NOTIFIER=false
+      - YARN_DISABLE_SELF_UPDATE_CHECK=true
+      - NODE_ICU_DATA=/usr/local/lib/node_modules/full-icu
+      - NODE_ENV=production
+      - N8N_RELEASE_TYPE=stable
+      - SHELL=/bin/sh
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - n8n_network
+    working_dir: /home/node
+    # Убрал mac-address, labels и runtime так как они обычно не нужны в compose
+
+volumes:
+  n8n_data:
+
+networks:
+  n8n_network:
